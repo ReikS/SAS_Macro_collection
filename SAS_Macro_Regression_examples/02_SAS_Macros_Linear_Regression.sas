@@ -10,7 +10,7 @@ Summary: This script begins by importing the Boston Housing dataset from a CSV f
 /****************************************************************/
 **** Data import and prep ****;
 /****************************************************************/
-libname datlib "D:\E\Wissensbasis\Projekte\SAS_Macro_collection";
+libname datlib "D:\E\Wissensbasis\Projekte\SAS_Macro_collection\SAS_Macro_Regression_examples";
 
 %macro importData(pathfile, outlib, outfile, delimiter);
     FILENAME REFFILE "&pathfile.";
@@ -24,7 +24,7 @@ libname datlib "D:\E\Wissensbasis\Projekte\SAS_Macro_collection";
     RUN;
 %mend importData;
 
-%importData('D:\E\Wissensbasis\Projekte\SAS_Macro_collection\housing.csv', datlib, HOUSING, ';');
+%importData('D:\E\Wissensbasis\Projekte\SAS_Macro_collection\SAS_Macro_Regression_examples\housing.csv', datlib, HOUSING, ';');
 
 %macro basicAnalysis(dataset);
     PROC PRINT DATA=&dataset (OBS=5); RUN;

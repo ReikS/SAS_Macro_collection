@@ -28,7 +28,7 @@
 /****************************************************************/
 **** Data import and prep ****;
 /****************************************************************/
-libname datlib "D:\E\Wissensbasis\Projekte\SAS_Macro_collection";
+libname datlib "D:\E\Wissensbasis\Projekte\SAS_Macro_collection\SAS_Macro_Regression_examples";
 
 /* Macro: %import_csv
 Parameters:
@@ -52,7 +52,7 @@ Options:
     RUN;
 %mend;
 
-%import_csv("D:\E\Wissensbasis\Projekte\SAS_Macro_collection\adult.csv", datlib.adult);
+%import_csv("D:\E\Wissensbasis\Projekte\SAS_Macro_collection\SAS_Macro_Regression_examples\adult.csv", datlib.adult);
 
 
 /* Create dependent binary variable high_income, being either 0 or 1 */
