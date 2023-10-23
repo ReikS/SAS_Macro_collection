@@ -11,7 +11,7 @@
 *	
 * SUMMARY : See below a list of the macros and code snippets contained
 *           in this collection : 
-*               0. Program header template
+*               000. Program header template
 *
 *
 * REVIEW SUMMARY : <reviewer's notes>
@@ -32,7 +32,7 @@
 
 
 ****************************************************************
-* 0. Program header template
+* 000. Program header template
 ****************************************************************/
 
 /****************************************************************
