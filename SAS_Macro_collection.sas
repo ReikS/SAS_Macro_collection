@@ -12,6 +12,7 @@
 * SUMMARY : See below a list of the macros and code snippets contained
 *           in this collection : 
 *               000. Program header template
+*				001. Macro docstring template
 *
 *
 * REVIEW SUMMARY : <reviewer's notes>
@@ -65,6 +66,53 @@
 *
 ****************************************************************/
 
+****************************************************************
+* 001. Macro docstring template
+****************************************************************/ 
+/*
+This template provides a structured way to document important aspects of a SAS macro, 
+including its name, purpose, parameters, usage example, authorship, and any special notes. 
+Adjust the fields as needed for each specific macro.
+*/
+
+/*
+Macro Name:
+    MacroName
+
+Description:
+    [Brief description of what the macro does.]
+
+Parameters:
+    param1 (type): [Description of param1]
+    param2 (type): [Description of param2]
+    ...
+    paramN (type): [Description of paramN]
+
+Returns:
+    [Description of what the macro returns or outputs, if applicable.]
+
+Example:
+    [Example of how to use the macro.]
+
+Author:
+    [Your Name]
+
+Date:
+    [Date of creation or last modification]
+
+Notes:
+    [Any additional notes or considerations]
+
+*/
+
+/* Macro code here */
+* %macro MacroName(parameters);
+* %mend MacroName;
+
+
+
+
+
 
 ****************************************************************
 * 900. Transfer
@@ -75,9 +123,9 @@
 * 901. Pricing
 ****************************************************************/ 
 
-/**
 
 **** Pricing in general **** ;
+/**
 
 Pricing strategies for retail products are diverse and complex, often tailored to the specific industry, customer base, market conditions, and product characteristics. Below is an overview of some commonly used pricing strategies in the retail sector, along with sources where you can find more detailed information.
 

@@ -10,8 +10,36 @@ Summary: This script begins by importing the Boston Housing dataset from a CSV f
 /****************************************************************/
 **** Data import and prep ****;
 /****************************************************************/
-libname datlib "D:\E\Wissensbasis\Projekte\SAS_Macro_collection\SAS_Macro_Regression_examples";
+/*
+Macro Name:
+    importData
 
+Description:
+    Imports CSV data into a SAS dataset using PROC IMPORT.
+
+Parameters:
+    pathfile (string): The full path and filename of the CSV file to import.
+    outlib (string): The libname where the dataset should be saved.
+    outfile (string): The name of the output SAS dataset.
+    delimiter (char): The delimiter used in the CSV file (e.g., ',', ';').
+
+Returns:
+    A SAS dataset is created in the specified library with the given outfile name.
+
+Example:
+    libname datlib "D:\E\Wissensbasis\Projekte\SAS_Macro_collection\SAS_Macro_Regression_examples";
+    %importData('D:\E\Wissensbasis\Projekte\SAS_Macro_collection\SAS_Macro_Regression_examples\housing.csv', datlib, HOUSING, ';');
+
+Author:
+    [Your Name]
+
+Date:
+    [Date of creation or last modification]
+
+Notes:
+    The macro assumes that the first row of the CSV file contains column names.
+
+*/
 %macro importData(pathfile, outlib, outfile, delimiter);
     FILENAME REFFILE "&pathfile.";
     PROC IMPORT DATAFILE=REFFILE
@@ -24,6 +52,8 @@ libname datlib "D:\E\Wissensbasis\Projekte\SAS_Macro_collection\SAS_Macro_Regres
     RUN;
 %mend importData;
 
+/* Example call */
+libname datlib "D:\E\Wissensbasis\Projekte\SAS_Macro_collection\SAS_Macro_Regression_examples";
 %importData('D:\E\Wissensbasis\Projekte\SAS_Macro_collection\SAS_Macro_Regression_examples\housing.csv', datlib, HOUSING, ';');
 
 %macro basicAnalysis(dataset);
