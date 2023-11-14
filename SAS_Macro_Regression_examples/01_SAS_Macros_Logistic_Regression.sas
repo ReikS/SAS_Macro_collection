@@ -23,6 +23,28 @@
 * several sections: data import and preparation, model development, model scoring, and model performance testing.
 *
 * Please find a detailed summary at the end of the script.
+/**** DETAILED SUMMARY ****
+
+**Data Import and Preparation**
+The dataset used is the publicly available "Adult" dataset from the UCI Machine Learning Repository. The script imports this dataset and prepares it by creating a binary dependent variable, high_income.
+
+**Model Development**
+The dataset is stratified based on the high_income variable. A macro, `stratify_data`, is used to randomly split the data into a training set (70%) and a test set (30%). The logistic regression model is built on the training dataset with the dependent variable being high_income and independent variables including age, workclass, education, marital status, and more. Automatic stepwise selection is performed to choose the best subset of predictors. The model estimates are stored for future use.
+
+**Model Scoring**
+The model is then scored on both the training and test datasets. The scored datasets contain the predicted probability of high_income, which is renamed to PP. The observations are then grouped into four 'Grades' based on the quantiles of PP.
+
+**Model Performance Testing**
+Several statistical techniques are used to test the performance of the model on both the training and test data:
+
+1. Descriptive Analysis: A summary of the data is provided including the mean, median, min, max, and standard deviation.
+
+2. Discriminatory Power: The ability of the model to differentiate between different outcomes is assessed by calculating the Gini coefficient and creating a confusion matrix. The Gini coefficient is derived from the area under the ROC curve and can range from 0 to 1, with a higher value indicating a better model. The F-score, which is a measure of test accuracy, is also calculated.
+
+3. Accuracy: The accuracy of the model is evaluated using a paired t-test comparing high_income and PP. This is done overall and also separately for each 'Grade'. A binomial test is also performed to compare the number of "successes" (high_income = 1) to the average predicted probability (PP).
+
+The final logistic regression model achieved a Gini coefficient of around 80%, which is considered good as a higher Gini coefficient indicates better model performance.
+
 /****************************************************************;
 
 /****************************************************************/
@@ -448,24 +470,80 @@ RUN;
 %BinomialTestGrade(data=datlib.out_score_test, out=datlib.binomial_test_test_grade);
 
 
-/**** DETAILED SUMMARY ****
+/**** Model Extension ****
+To extend the logistic regression model in your SAS project by investigating the potential of an additional variable for enhancing model performance within the existing grades, the following approach can be taken:
 
-**Data Import and Preparation**
-The dataset used is the publicly available "Adult" dataset from the UCI Machine Learning Repository. The script imports this dataset and prepares it by creating a binary dependent variable, high_income.
+    Identify Potential Predictors: Start by examining the existing variables in your dataset. Look for those not included in the current model which might have predictive power. This could involve variables that were excluded during the stepwise selection process or new variables derived from existing ones.
 
-**Model Development**
-The dataset is stratified based on the high_income variable. A macro, `stratify_data`, is used to randomly split the data into a training set (70%) and a test set (30%). The logistic regression model is built on the training dataset with the dependent variable being high_income and independent variables including age, workclass, education, marital status, and more. Automatic stepwise selection is performed to choose the best subset of predictors. The model estimates are stored for future use.
+    Statistical Methods for Variable Selection: You can employ several statistical methods to identify the best predictors. These include:
+        Chi-Square Test for Categorical Variables: If the potential predictor is categorical, use a chi-square test to determine if there is a significant relationship between this variable and the grades.
+        ANOVA for Continuous Variables: If the potential predictor is continuous, use ANOVA to test if there are significant differences in this variable across different grades.
+        Correlation Analysis: Analyze the correlation of each potential predictor with the outcome variable (high_income).
 
-**Model Scoring**
-The model is then scored on both the training and test datasets. The scored datasets contain the predicted probability of high_income, which is renamed to PP. The observations are then grouped into four 'Grades' based on the quantiles of PP.
+    Model Comparison: Once a new potential predictor is identified, fit a new logistic regression model that includes this variable. Then compare the performance of this new model with the existing model using metrics like AIC (Akaike Information Criterion), BIC (Bayesian Information Criterion), or changes in the Gini coefficient.
 
-**Model Performance Testing**
-Several statistical techniques are used to test the performance of the model on both the training and test data:
+Here are the SAS macros to perform these tasks:
 
-1. Descriptive Analysis: A summary of the data is provided including the mean, median, min, max, and standard deviation.
+*-------------------------------------------------------;
+* Macro for Chi-Square Test or ANOVA based on Variable Type
+*-------------------------------------------------------;
+%macro testPredictor(data, var);
+    %if %sysfunc(vartype(&data, &var)) = N %then %do;
+        /* ANOVA for Continuous Variable */
+        proc anova data=&data;
+            class Grade;
+            model &var = Grade;
+        run;
+    %end;
+    %else %do;
+        /* Chi-Square Test for Categorical Variable */
+        proc freq data=&data;
+            tables Grade*&var / chisq;
+        run;
+    %end;
+%mend testPredictor;
 
-2. Discriminatory Power: The ability of the model to differentiate between different outcomes is assessed by calculating the Gini coefficient and creating a confusion matrix. The Gini coefficient is derived from the area under the ROC curve and can range from 0 to 1, with a higher value indicating a better model. The F-score, which is a measure of test accuracy, is also calculated.
+*-------------------------------------------------------;
+* Macro for Correlation Analysis
+*-------------------------------------------------------;
+%macro correlationAnalysis(data, var);
+    proc corr data=&data;
+        var &var high_income;
+    run;
+%mend correlationAnalysis;
 
-3. Accuracy: The accuracy of the model is evaluated using a paired t-test comparing high_income and PP. This is done overall and also separately for each 'Grade'. A binomial test is also performed to compare the number of "successes" (high_income = 1) to the average predicted probability (PP).
+*-------------------------------------------------------;
+* Macro for Model Comparison
+*-------------------------------------------------------;
+%macro compareModels(data, oldModel, newVar);
+    /* Fit the old model */
+    proc logistic data=&data descending;
+        model high_income = &oldModel;
+        output out=old_pred p=old_pp;
+    run;
 
-The final logistic regression model achieved a Gini coefficient of around 80%, which is considered good as a higher Gini coefficient indicates better model performance.
+    /* Fit the new model with additional variable */
+    proc logistic data=&data descending;
+        model high_income = &oldModel &newVar;
+        output out=new_pred p=new_pp;
+    run;
+
+    /* Model comparison */
+    proc compare data=old_pred compare=new_pred;
+    run;
+%mend compareModels;
+
+* How to Use These Macros 
+Replace YourVariable with the name of the variable you want to test, and OldModelVars with the variables in your existing model.
+These macros will provide a comprehensive analysis of the potential new variable's relationship with the grades and its impact on the model's performance.
+;
+
+* To test a potential predictor, use ;
+%testPredictor(data=datlib.out_score, var=YourVariable);
+
+* For correlation analysis, use ;
+%correlationAnalysis(data=datlib.out_score, var=YourVariable);
+
+* To compare models, use ;
+%compareModels(data=datlib.out_split, oldModel=OldModelVars, newVar=NewVariable);
+
