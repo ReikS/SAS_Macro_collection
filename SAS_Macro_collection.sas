@@ -11,8 +11,9 @@
 *	
 * SUMMARY : See below a list of the macros and code snippets contained
 *           in this collection : 
-*               000. Program header template
-*				001. Macro docstring template
+*               000. Coding standards
+*               001. Program header template
+*				002. Macro docstring template
 * 				110. Linear regression
 *				120. Logistic regression
 *
@@ -35,7 +36,21 @@
 
 
 ****************************************************************
-* 000. Program header template
+* 000. Coding standards
+****************************************************************/
+/**
+* Adhere to the following coding standards.
+* 1. The solution should consist of a single or a small number of scripts.
+* 2. Each script has a program header.
+* 3. Coding style to be used is functional programming. That means that custom functions are desinged for parts of the solution and then used for the overall solution.
+* 4. Each function is commented with a doc string as well as inline comments. The doc string contains a detailed description on the function's arguments and the returned objects. Type hints shall be used.
+* 5. PIP-8 applies.
+
+* Use the following templape for the program header:
+/**/
+
+****************************************************************
+* 001. Program header template
 ****************************************************************/
 
 /****************************************************************
@@ -69,7 +84,7 @@
 ****************************************************************/
 
 ****************************************************************
-* 001. Macro docstring template
+* 002. Macro docstring template
 ****************************************************************/ 
 /*
 This template provides a structured way to document important aspects of a SAS macro, 
